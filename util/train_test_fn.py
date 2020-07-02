@@ -10,6 +10,7 @@ tb_logger = SummaryWriter('events')
 def train(epoch,model,loss_fn,optimizer,dataloader,pair_generation_tnf,use_cuda=True,log_interval=50, logger=None):
     model.train()
     train_loss = 0
+    B = len(dataloader)
     for batch_idx, batch in enumerate(dataloader):
         optimizer.zero_grad()
         tnf_batch = pair_generation_tnf(batch)
@@ -37,7 +38,7 @@ def train(epoch,model,loss_fn,optimizer,dataloader,pair_generation_tnf,use_cuda=
                 'img': img_cat
             }
             for tag, images in info.items():
-                tb_logger.add_images(tag, images, batch_idx)
+                tb_logger.add_images(tag, images, epoch*B + batch_idx)
             #print('Train Epoch: {} [{}/{} ({:.0f}%)]\t\tLoss: {:.6f}'.format(
             #   epoch, batch_idx , len(dataloader),
             #   100. * batch_idx / len(dataloader), loss.item()))
